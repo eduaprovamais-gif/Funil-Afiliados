@@ -524,7 +524,7 @@ const QuizBuilder: React.FC<QuizBuilderProps> = ({ quiz, setQuiz, onExit }) => {
                 onDuplicate: (nodeId: string) => duplicateNode(nodeId)
             }
         })));
-    }, []); // Empty dependency array - only run once on mount
+    }, [duplicateNode, setNodes]); // Update when duplicateNode changes
 
     // Sync ReactFlow Nodes back to Quiz State when they change (e.g., dragged)
     useEffect(() => {

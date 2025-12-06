@@ -142,14 +142,23 @@ export async function publishQuiz({ quizId, slug }: PublishQuizParams) {
             throw new Error('Este slug já está em uso. Tente outro título.');
         }
 
-        // Criar ou atualizar publicação via RPC seguro
+        // Criar ou atualizar publicação
         const { data: published, error: publishError } = await supabase
-            .rpc('publish_quiz_secure', {
-                p_quiz_id: quizId,
-                p_slug: finalSlug
-            });
+            .from('published_quizzes')
+            .upsert({
+                quiz_id: quizId,
+                slug: finalSlug,
+                is_active: true
+            }, {
+                onConflict: 'quiz_id'
+            })
+            .select()
+            .single();
 
-        if (publishError) throw publishError;
+        if (publishError) {
+            console.error('Erro ao publicar:', publishError);
+            throw publishError;
+        }
 
         // Criar registro de analytics se não existir
         const { error: analyticsError } = await supabase
