@@ -102,8 +102,10 @@ const QuestionNode = ({ data, selected, id }: any) => {
                         e.stopPropagation();
                         console.log('Duplicate clicked for:', id, 'has handler:', !!data.onDuplicate);
                         if (data.onDuplicate) {
+                            alert(`Duplicando card: ${id}`);
                             data.onDuplicate(id);
                         } else {
+                            alert(`ERRO: Sem handler para: ${id}`);
                             console.warn('No onDuplicate handler for node:', id);
                         }
                     }}
