@@ -32,6 +32,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const {
             data: { subscription },
         } = supabase.auth.onAuthStateChange((_event, session) => {
+            console.log('Auth state changed:', _event, session?.user?.email);
             setSession(session);
             setUser(session?.user ?? null);
             setLoading(false);
@@ -62,13 +63,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     const signInWithGoogle = async () => {
-        const { error } = await supabase.auth.signInWithOAuth({
-            provider: 'google',
-            options: {
-                redirectTo: `${window.location.origin}/`,
-            },
-        });
-        return { error };
+        try {
+            const { data, error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: `${window.location.origin}`,
+                    skipBrowserRedirect: false,
+                    queryParams: {
+                        access_type: 'offline',
+                        prompt: 'consent',
+                    },
+                },
+            });
+            
+            if (error) {
+                console.error('Google OAuth error:', error);
+                return { error };
+            }
+            
+            console.log('Google OAuth initiated:', data);
+            return { error: null };
+        } catch (err: any) {
+            console.error('Google login error:', err);
+            return { error: err };
+        }
     };
 
     const resetPassword = async (email: string) => {

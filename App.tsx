@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useSearchParams } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ToastProvider } from './components/Toast';
 import LandingPage from './components/LandingPage';
@@ -11,6 +11,7 @@ import PublicQuiz from './pages/PublicQuiz';
 import { useState, useEffect, ReactNode } from 'react';
 import { Quiz } from './types';
 import { demoQuiz } from './data/demoQuiz';
+import { loadQuiz } from './services/quizService';
 
 // Componente para proteger rotas
 function ProtectedRoute({ children }: { children: ReactNode }) {
@@ -42,23 +43,65 @@ function ProtectedRoute({ children }: { children: ReactNode }) {
 
 // Componente principal do Builder
 function BuilderPage() {
-  // Initialize from localStorage if available, otherwise use demoQuiz
-  const [currentQuiz, setCurrentQuiz] = useState<Quiz>(() => {
-    const saved = localStorage.getItem('quiz_autosave');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        console.error('Failed to parse saved quiz', e);
+  const [searchParams] = useSearchParams();
+  const { user } = useAuth();
+  const [currentQuiz, setCurrentQuiz] = useState<Quiz | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadQuizData = async () => {
+      const quizId = searchParams.get('id');
+      
+      if (quizId && user) {
+        // Carrega do Supabase se houver um ID
+        try {
+          const result = await loadQuiz(quizId);
+          if (result.success && result.quiz) {
+            setCurrentQuiz(result.quiz);
+          } else {
+            // Fallback se não encontrar
+            const saved = localStorage.getItem('quiz_autosave');
+            setCurrentQuiz(saved ? JSON.parse(saved) : demoQuiz);
+          }
+        } catch (error) {
+          console.error('Erro ao carregar quiz:', error);
+          const saved = localStorage.getItem('quiz_autosave');
+          setCurrentQuiz(saved ? JSON.parse(saved) : demoQuiz);
+        }
+      } else {
+        // Se não houver ID, usa localStorage ou demo
+        const saved = localStorage.getItem('quiz_autosave');
+        setCurrentQuiz(saved ? JSON.parse(saved) : demoQuiz);
       }
-    }
-    return demoQuiz;
-  });
+      setLoading(false);
+    };
+
+    loadQuizData();
+  }, [searchParams, user]);
 
   // Auto-save to localStorage whenever quiz changes
   useEffect(() => {
-    localStorage.setItem('quiz_autosave', JSON.stringify(currentQuiz));
+    if (currentQuiz) {
+      localStorage.setItem('quiz_autosave', JSON.stringify(currentQuiz));
+    }
   }, [currentQuiz]);
+
+  if (loading || !currentQuiz) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#0f172a'
+      }}>
+        <div style={{ textAlign: 'center', color: 'white' }}>
+          <div style={{ fontSize: '48px', marginBottom: '16px' }}>⏳</div>
+          <p>Carregando seu funil...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <QuizBuilder

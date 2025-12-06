@@ -275,7 +275,18 @@ const QuizBuilder: React.FC<QuizBuilderProps> = ({ quiz, setQuiz, onExit }) => {
         }
         setIsSaving(true);
         try {
-            const result = await saveQuiz({ userId: user.id, quiz, quizId: quizId || undefined });
+            // Sincronizar posições dos nodes antes de salvar
+            const updatedQuestions = quiz.questions.map(q => {
+                const node = nodes.find(n => n.id === q.id);
+                return {
+                    ...q,
+                    position: node ? node.position : (q.position || { x: 0, y: 0 })
+                };
+            });
+
+            const quizToSave = { ...quiz, questions: updatedQuestions };
+
+            const result = await saveQuiz({ userId: user.id, quiz: quizToSave, quizId: quizId || undefined });
 
             if (!result.success) throw result.error;
 
