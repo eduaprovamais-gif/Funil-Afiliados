@@ -109,7 +109,8 @@ const QuestionNode = ({ data, selected, id }: any) => {
                             console.warn('No onDuplicate handler for node:', id);
                         }
                     }}
-                    className="p-2 rounded-lg bg-slate-800 hover:bg-purple-600 text-slate-400 hover:text-white transition-all border border-slate-700 hover:border-purple-400 shadow-lg"
+                    style={{ pointerEvents: 'auto' }}
+                    className="p-2 rounded-lg bg-slate-800 hover:bg-purple-600 text-slate-400 hover:text-white transition-all border border-slate-700 hover:border-purple-400 shadow-lg cursor-pointer"
                     title="Duplicar card"
                 >
                     <Copy className="w-4 h-4" />
@@ -123,7 +124,8 @@ const QuestionNode = ({ data, selected, id }: any) => {
                             data.onEditClick(id);
                         }
                     }}
-                    className="p-2 rounded-lg bg-slate-800 hover:bg-cyan-600 text-slate-400 hover:text-white transition-all border border-slate-700 hover:border-cyan-400 shadow-lg"
+                    style={{ pointerEvents: 'auto' }}
+                    className="p-2 rounded-lg bg-slate-800 hover:bg-cyan-600 text-slate-400 hover:text-white transition-all border border-slate-700 hover:border-cyan-400 shadow-lg cursor-pointer"
                     title="Editar propriedades"
                 >
                     <Settings className="w-4 h-4" />
