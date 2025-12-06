@@ -147,6 +147,7 @@ export async function publishQuiz({ quizId, slug }: PublishQuizParams) {
             .from('published_quizzes')
             .upsert({
                 quiz_id: quizId,
+                user_id: user.id,
                 slug: finalSlug,
                 is_active: true
             }, {

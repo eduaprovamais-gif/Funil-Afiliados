@@ -100,8 +100,11 @@ const QuestionNode = ({ data, selected, id }: any) => {
                 <button
                     onClick={(e) => {
                         e.stopPropagation();
+                        console.log('Duplicate clicked for:', id, 'has handler:', !!data.onDuplicate);
                         if (data.onDuplicate) {
                             data.onDuplicate(id);
+                        } else {
+                            console.warn('No onDuplicate handler for node:', id);
                         }
                     }}
                     className="p-2 rounded-lg bg-slate-800 hover:bg-purple-600 text-slate-400 hover:text-white transition-all border border-slate-700 hover:border-purple-400 shadow-lg"
