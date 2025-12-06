@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>XQuiz - Funis Interativos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              background: '#020617', // slate-950
+              foreground: '#f8fafc', // slate-50
+              primary: {
+                500: '#0ea5e9', // sky-500
+                600: '#0284c7', // sky-600
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reactflow@11.10.4/dist/style.css" />
+    <style>
+      body { font-family: 'Inter', sans-serif; }
+      /* Custom scrollbar for dark theme */
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: #0f172a; }
+      ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #475569; }
+      
+      /* React Flow Dark Theme Overrides */
+      .react-flow__node { font-family: 'Inter', sans-serif; }
+      .react-flow__handle { width: 8px; height: 8px; background: #94a3b8; }
+      .react-flow__handle-right { right: -4px; }
+      .react-flow__handle-left { left: -4px; }
+      .react-flow__edge-path { stroke: #64748b; stroke-width: 2; }
+      .react-flow__controls { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid #1e293b; background: #0f172a; }
+      .react-flow__controls-button { border-bottom: 1px solid #1e293b; fill: #94a3b8; }
+      .react-flow__controls-button:hover { background: #1e293b; fill: #f8fafc; }
+      .react-flow__attribution { display: none; }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react-dom": "https://aistudiocdn.com/react-dom@^19.2.0",
+    "reactflow": "https://esm.sh/reactflow@11.10.4?external=react,react-dom",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-background text-foreground antialiased overflow-x-hidden">
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
